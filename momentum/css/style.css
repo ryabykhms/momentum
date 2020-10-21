@@ -14,17 +14,24 @@ body {
   height: 100vh;
   background-size: cover;
   color: #fff;
+  font-size: 10px;
 }
 
 #time {
   font-size: 8rem;
 }
 
+.day {
+  font-size: 2rem;
+}
+
 h1 {
+  font-size: 3rem;
   margin-bottom: 3rem;
 }
 
 h2 {
+  font-size: 2rem;
   margin-bottom: 0.5rem;
   opacity: 0.6;
 }
