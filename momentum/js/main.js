@@ -87,7 +87,7 @@ class View {
     this.timeElement.innerHTML = `<div class="day">${dayOfWeek}, ${dayOfMonth} ${month}</div>${hour}<span>:</span>${min}<span>:</span>${sec} ${
       showAmPm && !this.timeObject.is24h ? amPm : ""
     }`;
-    if (min === 0 && sec === 0) {
+    if (min === "00" && sec === "00") {
       this.setBackground(hour);
     }
     setTimeout(this.showTime.bind(this), 1000, showAmPm);
@@ -101,7 +101,8 @@ class View {
       const timeOfDay = this.timeObject.getTimeOfDay().toLowerCase();
       let imgNumber = this.backgrounds[timeOfDay][hour % 6];
       imgNumber = imgNumber < 10 ? `0${imgNumber}` : imgNumber;
-      this.container.style.backgroundImage = `url('assets/img/${timeOfDay}/${imgNumber}.jpg')`;
+      const url = `assets/img/${timeOfDay}/${imgNumber}.jpg`;
+      this.vieBgImage(url);
     }
   }
 
