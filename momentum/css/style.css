@@ -12,11 +12,12 @@ body {
   justify-content: center;
   text-align: center;
   height: 100vh;
+  background-size: cover;
   color: #000000;
 }
 
 #time {
-  font-style: 8rem;
+  font-size: 8rem;
 }
 
 h1 {
