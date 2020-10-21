@@ -24,21 +24,28 @@ class Time {
   }
 
   getTimeOfDay() {
-    const {hour} = this.getCurrentTime(true);
+    const { hour } = this.getCurrentTime(true);
     if (hour < 6) {
-      return 'Night';
+      return "Night";
     } else if (hour < 12) {
-      return 'Morning';
+      return "Morning";
     } else if (hour < 18) {
-      return 'Afternoon';
+      return "Afternoon";
     } else {
-      return 'Evening';
+      return "Evening";
     }
   }
 }
 
 class View {
-  constructor(timeObject, timeElement, greetingElement, nameElement, focusElement, container = document.body) {
+  constructor(
+    timeObject,
+    timeElement,
+    greetingElement,
+    nameElement,
+    focusElement,
+    container = document.body
+  ) {
     this.timeObject = timeObject;
     this.timeElement = timeElement;
     this.greetingElement = greetingElement;
@@ -50,7 +57,7 @@ class View {
   }
 
   showTime(showAmPm) {
-    const {hour, min, sec, amPm} = this.timeObject.getCurrentTime();
+    const { hour, min, sec, amPm } = this.timeObject.getCurrentTime();
     this.timeElement.innerHTML = `${hour}<span>:</span>${min}<span>:</span>${sec} ${
       showAmPm ? amPm : ""
     }`;
@@ -59,43 +66,43 @@ class View {
 
   setBackground() {
     const timeOfDay = this.timeObject.getTimeOfDay();
-    if (timeOfDay === 'Evening' || timeOfDay === 'Night') {
-      this.container.style.color = '#fff';
+    if (timeOfDay === "Evening" || timeOfDay === "Night") {
+      this.container.style.color = "#fff";
     }
     this.container.style.backgroundImage = `url('assets/img/${timeOfDay.toLowerCase()}/01.jpg')`;
   }
 
   setGreeting() {
     const timeOfDay = this.timeObject.getTimeOfDay();
-    this.greetingElement.textContent = 'Good ' + timeOfDay;
+    this.greetingElement.textContent = "Good " + timeOfDay;
   }
 
   getName() {
-    if (localStorage.getItem('name') === null) {
-      this.nameElement.textContent = '[Enter Name]';
+    if (localStorage.getItem("name") === null) {
+      this.nameElement.textContent = "[Enter Name]";
     } else {
-      this.nameElement.textContent = localStorage.getItem('name');
+      this.nameElement.textContent = localStorage.getItem("name");
     }
   }
 
   getFocus() {
-    if (localStorage.getItem('focus') === null) {
-      this.focusElement.textContent = '[Enter Focus]';
+    if (localStorage.getItem("focus") === null) {
+      this.focusElement.textContent = "[Enter Focus]";
     } else {
-      this.focusElement.textContent = localStorage.getItem('focus');
+      this.focusElement.textContent = localStorage.getItem("focus");
     }
   }
 
   setName(e) {
-    this.setStorageAfterEvent(e, 'name');
+    this.setStorageAfterEvent(e, "name");
   }
 
   setFocus(e) {
-    this.setStorageAfterEvent(e, 'focus');
+    this.setStorageAfterEvent(e, "focus");
   }
 
   setStorageAfterEvent(e, item) {
-    if (e.type === 'keypress') {
+    if (e.type === "keypress") {
       // Make sure enter is pressed
       if (e.which == 13 || e.keyCode == 13) {
         localStorage.setItem(item, e.target.innerText);
@@ -107,10 +114,10 @@ class View {
   }
 
   setEventListeners() {
-    this.nameElement.addEventListener('keypress', this.setName.bind(this));
-    this.nameElement.addEventListener('blur', this.setName.bind(this));
-    this.focusElement.addEventListener('keypress', this.setFocus.bind(this));
-    this.focusElement.addEventListener('blur', this.setFocus.bind(this));
+    this.nameElement.addEventListener("keypress", this.setName.bind(this));
+    this.nameElement.addEventListener("blur", this.setName.bind(this));
+    this.focusElement.addEventListener("keypress", this.setFocus.bind(this));
+    this.focusElement.addEventListener("blur", this.setFocus.bind(this));
   }
 }
 
@@ -129,13 +136,12 @@ class Momentum {
 }
 
 // DOM Elements
-const time = document.getElementById('time');
-const greeting = document.getElementById('greeting');
-const name = document.getElementById('name');
-const focus = document.getElementById('focus');
+const time = document.getElementById("time");
+const greeting = document.getElementById("greeting");
+const name = document.getElementById("name");
+const focus = document.getElementById("focus");
 
 const timeObject = new Time();
 const view = new View(timeObject, time, greeting, name, focus);
 const momentum = new Momentum(view);
 momentum.run();
-
