@@ -1,5 +1,5 @@
 class Time {
-  getCurrentTime() {
+  getCurrentTime(is24h = false) {
     let today = new Date();
     let hour = today.getHours();
     let min = this.addZero(today.getMinutes());
@@ -9,7 +9,7 @@ class Time {
     const amPm = hour >= 12 ? "PM" : "AM";
 
     // 12hr Format
-    hour = hour % 12 || 12;
+    hour = is24h ? hour : hour % 12 || 12;
 
     return {
       hour,
@@ -22,12 +22,28 @@ class Time {
   addZero(n) {
     return (parseInt(n, 10) < 10 ? "0" : "") + n;
   }
+
+  getTimeOfDay() {
+    const {hour} = this.getCurrentTime(true);
+    if (hour < 6) {
+      return 'Night';
+    } else if (hour < 12) {
+      return 'Morning';
+    } else if (hour < 18) {
+      return 'Afternoon';
+    } else {
+      return 'Evening';
+    }
+  }
 }
 
 class View {
-  constructor(timeObject, timeElement) {
+  constructor(timeObject, timeElement, greetingElement, focusElement, container = document.body) {
     this.timeObject = timeObject;
     this.timeElement = timeElement;
+    this.greetingElement = greetingElement;
+    this.focusElement = focusElement;
+    this.container = container;
   }
 
   showTime(showAmPm) {
@@ -37,6 +53,20 @@ class View {
     }`;
     setTimeout(this.showTime.bind(this), 1000, showAmPm);
   }
+
+  setBackground() {
+    const timeOfDay = this.timeObject.getTimeOfDay();
+    if (timeOfDay === 'Evening' || timeOfDay === 'Night') {
+      this.container.style.color = '#fff';
+    }
+    this.container.style.backgroundImage = `url('assets/img/${timeOfDay.toLowerCase()}/01.jpg')`;
+  }
+
+  setGreeting() {
+    const timeOfDay = this.timeObject.getTimeOfDay();
+    this.greetingElement.textContent = 'Good ' + timeOfDay;
+  }
+
 }
 
 class Momentum {
@@ -46,6 +76,8 @@ class Momentum {
 
   run(showAmPm = true) {
     this.view.showTime(showAmPm);
+    this.view.setGreeting();
+    this.view.setBackground();
   }
 }
 
@@ -56,7 +88,7 @@ const name = document.getElementById('name');
 const focus = document.getElementById('focus');
 
 const timeObject = new Time();
-const view = new View(timeObject, time);
+const view = new View(timeObject, time, greeting, focus);
 const momentum = new Momentum(view);
 momentum.run();
 
