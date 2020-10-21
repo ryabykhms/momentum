@@ -1,5 +1,5 @@
 class Time {
-  constructor(is24h = false, locale = 'en-Us') {
+  constructor(is24h = false, locale = "en-Us") {
     this.is24h = is24h;
     this.locale = locale;
   }
@@ -9,9 +9,9 @@ class Time {
     let hour = today.getHours();
     let min = this.addZero(today.getMinutes());
     let sec = this.addZero(today.getSeconds());
-    let dayOfWeek = today.toLocaleDateString(this.locale, {weekday: 'long'});
+    let dayOfWeek = today.toLocaleDateString(this.locale, { weekday: "long" });
     let dayOfMonth = today.getDate();
-    let month = today.toLocaleDateString(this.locale, {month: 'long'});
+    let month = today.toLocaleDateString(this.locale, { month: "long" });
 
     // Set AM or PM
     const amPm = hour >= 12 ? "PM" : "AM";
@@ -55,6 +55,7 @@ class View {
     greetingElement,
     nameElement,
     focusElement,
+    nextElement,
     container = document.body
   ) {
     this.timeObject = timeObject;
@@ -62,8 +63,10 @@ class View {
     this.greetingElement = greetingElement;
     this.nameElement = nameElement;
     this.focusElement = focusElement;
+    this.nextElement = nextElement;
     this.container = container;
 
+    this.currentBackground = {};
     this.setEventListeners();
   }
 
@@ -72,16 +75,29 @@ class View {
   }
 
   showTime(showAmPm) {
-    const { hour, min, sec, dayOfWeek, dayOfMonth, month, amPm } = this.timeObject.getCurrentTime();
+    const {
+      hour,
+      min,
+      sec,
+      dayOfWeek,
+      dayOfMonth,
+      month,
+      amPm,
+    } = this.timeObject.getCurrentTime();
     this.timeElement.innerHTML = `<div class="day">${dayOfWeek}, ${dayOfMonth} ${month}</div>${hour}<span>:</span>${min}<span>:</span>${sec} ${
       showAmPm && !this.timeObject.is24h ? amPm : ""
     }`;
-    this.setBackground(hour);
+    if (min === 59 && sec === 59) {
+      this.setBackground(hour);
+    }
     setTimeout(this.showTime.bind(this), 1000, showAmPm);
   }
 
   setBackground(hour) {
     if (this.backgrounds !== undefined) {
+      if (hour === undefined) {
+        hour = this.timeObject.getCurrentTime().hour;
+      }
       const timeOfDay = this.timeObject.getTimeOfDay().toLowerCase();
       let imgNumber = this.backgrounds[timeOfDay][hour % 6];
       imgNumber = imgNumber < 10 ? `0${imgNumber}` : imgNumber;
@@ -112,17 +128,17 @@ class View {
 
   setName(e) {
     this.setStorageAfterEvent(e, "name");
-    if (e.type === "blur" && e.target.textContent.trim() === '') {
-      e.target.textContent = '[Enter Name]';
-      localStorage.removeItem('name');
+    if (e.type === "blur" && e.target.textContent.trim() === "") {
+      e.target.textContent = "[Enter Name]";
+      localStorage.removeItem("name");
     }
   }
 
   setFocus(e) {
     this.setStorageAfterEvent(e, "focus");
-    if (e.type === "blur" && e.target.textContent.trim() === '') {
-      e.target.textContent = '[Enter Focus]';
-      localStorage.removeItem('focus');
+    if (e.type === "blur" && e.target.textContent.trim() === "") {
+      e.target.textContent = "[Enter Focus]";
+      localStorage.removeItem("focus");
     }
   }
 
@@ -139,7 +155,66 @@ class View {
   }
 
   clearField(e) {
-    e.target.textContent = '';
+    e.target.textContent = "";
+  }
+
+  vieBgImage(data) {
+    const body = document.querySelector("body");
+    const src = data;
+    const img = document.createElement("img");
+    img.src = src;
+    img.onload = () => {
+      body.style.backgroundImage = `url(${src})`;
+    };
+  }
+
+  changeBackground(e) {
+    if (this.backgrounds !== undefined) {
+      if (Object.keys(this.currentBackground).length === 0) {
+        this.currentBackground = {
+          timeOfDay: this.timeObject.getTimeOfDay().toLowerCase(),
+          number: (this.timeObject.getCurrentTime(true).hour % 6) + 1,
+        };
+      } else {
+        let timeOfDay = this.currentBackground.timeOfDay;
+        const number = +this.currentBackground.number + 1;
+        if (this.backgrounds[timeOfDay][number] === undefined) {
+          switch (timeOfDay) {
+            case "morning":
+              timeOfDay = "afternoon";
+              break;
+            case "afternoon":
+              timeOfDay = "evening";
+              break;
+            case "evening":
+              timeOfDay = "night";
+              break;
+            default:
+              timeOfDay = "morning";
+              break;
+          }
+          this.currentBackground = {
+            timeOfDay,
+            number: 1,
+          };
+        } else {
+          this.currentBackground = {
+            timeOfDay,
+            number,
+          };
+        }
+      }
+      const imgNumber =
+        this.currentBackground.number < 10
+          ? `0${this.currentBackground.number}`
+          : this.currentBackground.number;
+      const imageSrc = `assets/img/${this.currentBackground.timeOfDay}/${imgNumber}.jpg`;
+      this.vieBgImage(imageSrc);
+    }
+    e.target.disabled = true;
+    setTimeout(function () {
+      e.target.disabled = false;
+    }, 1000);
   }
 
   setEventListeners() {
@@ -149,6 +224,10 @@ class View {
     this.focusElement.addEventListener("keypress", this.setFocus.bind(this));
     this.focusElement.addEventListener("blur", this.setFocus.bind(this));
     this.focusElement.addEventListener("click", this.clearField.bind(this));
+    this.nextElement.addEventListener(
+      "click",
+      this.changeBackground.bind(this)
+    );
   }
 }
 
@@ -158,10 +237,10 @@ class Momentum {
     this.backgrounds = {};
   }
 
-  generateArrayRandomNumber (min, max) {
-    var totalNumbers 		= max - min + 1,
-      arrayTotalNumbers 	= [],
-      arrayRandomNumbers 	= [],
+  generateArrayRandomNumber(min, max) {
+    var totalNumbers = max - min + 1,
+      arrayTotalNumbers = [],
+      arrayRandomNumbers = [],
       tempRandomNumber;
 
     while (totalNumbers--) {
@@ -169,7 +248,9 @@ class Momentum {
     }
 
     while (arrayTotalNumbers.length) {
-      tempRandomNumber = Math.round(Math.random() * (arrayTotalNumbers.length - 1));
+      tempRandomNumber = Math.round(
+        Math.random() * (arrayTotalNumbers.length - 1)
+      );
       arrayRandomNumbers.push(arrayTotalNumbers[tempRandomNumber]);
       arrayTotalNumbers.splice(tempRandomNumber, 1);
     }
@@ -183,16 +264,16 @@ class Momentum {
       morning: random.slice(0, 6),
       afternoon: random.slice(0, 6),
       evening: random.slice(0, 6),
-      night: random.slice(0, 6)
-    }
+      night: random.slice(0, 6),
+    };
   }
 
   run(showAmPm = true) {
     this.generateBackgrounds();
     this.view.addBackgrounds(this.backgrounds);
+    this.view.setBackground();
     this.view.showTime(showAmPm);
     this.view.setGreeting();
-    // this.view.setBackground();
     this.view.getName();
     this.view.getFocus();
   }
@@ -203,9 +284,10 @@ const time = document.getElementById("time");
 const greeting = document.getElementById("greeting");
 const name = document.getElementById("name");
 const focus = document.getElementById("focus");
+const next = document.getElementById("next-image");
 
 const is24h = true;
 const timeObject = new Time(is24h);
-const view = new View(timeObject, time, greeting, name, focus);
+const view = new View(timeObject, time, greeting, name, focus, next);
 const momentum = new Momentum(view);
 momentum.run();

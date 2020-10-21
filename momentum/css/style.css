@@ -15,6 +15,7 @@ body {
   background-size: cover;
   color: #fff;
   font-size: 10px;
+  transition: background-image 1s ease-in-out;
 }
 
 #time {
