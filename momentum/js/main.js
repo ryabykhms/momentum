@@ -126,31 +126,36 @@ class View {
     }
   }
 
+  setText(e, itemName) {
+    if (e.target.textContent.trim() === "") {
+      const item = localStorage.getItem(itemName);
+      if (item === null || item.trim() === "") {
+        e.target.textContent = `[Enter ${itemName}]`;
+      } else {
+        e.target.textContent = item;
+      }
+    } else {
+      localStorage.setItem(itemName, e.target.textContent);
+    }
+  }
+
   setName(e) {
     this.setStorageAfterEvent(e, "name");
-    if (e.type === "blur" && e.target.textContent.trim() === "") {
-      e.target.textContent = "[Enter Name]";
-      localStorage.removeItem("name");
-    }
   }
 
   setFocus(e) {
     this.setStorageAfterEvent(e, "focus");
-    if (e.type === "blur" && e.target.textContent.trim() === "") {
-      e.target.textContent = "[Enter Focus]";
-      localStorage.removeItem("focus");
-    }
   }
 
   setStorageAfterEvent(e, item) {
     if (e.type === "keypress") {
       // Make sure enter is pressed
       if (e.which == 13 || e.keyCode == 13) {
-        localStorage.setItem(item, e.target.innerText);
+        this.setText(e, item);
         e.target.blur();
       }
     } else {
-      localStorage.setItem(item, e.target.innerText);
+      this.setText(e, item);
     }
   }
 
