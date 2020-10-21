@@ -87,7 +87,7 @@ class View {
     this.timeElement.innerHTML = `<div class="day">${dayOfWeek}, ${dayOfMonth} ${month}</div>${hour}<span>:</span>${min}<span>:</span>${sec} ${
       showAmPm && !this.timeObject.is24h ? amPm : ""
     }`;
-    if (min === 59 && sec === 59) {
+    if (min === 0 && sec === 0) {
       this.setBackground(hour);
     }
     setTimeout(this.showTime.bind(this), 1000, showAmPm);
