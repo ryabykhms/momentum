@@ -1,20 +1,31 @@
 class Time {
+  constructor(is24h = false, locale = 'en-Us') {
+    this.is24h = is24h;
+    this.locale = locale;
+  }
+
   getCurrentTime(is24h = false) {
     let today = new Date();
     let hour = today.getHours();
     let min = this.addZero(today.getMinutes());
     let sec = this.addZero(today.getSeconds());
+    let dayOfWeek = today.toLocaleDateString(this.locale, {weekday: 'long'});
+    let dayOfMonth = today.getDate();
+    let month = today.toLocaleDateString(this.locale, {month: 'long'});
 
     // Set AM or PM
     const amPm = hour >= 12 ? "PM" : "AM";
 
     // 12hr Format
-    hour = is24h ? hour : hour % 12 || 12;
+    hour = this.is24h || is24h ? hour : hour % 12 || 12;
 
     return {
       hour,
       min,
       sec,
+      dayOfWeek,
+      dayOfMonth,
+      month,
       amPm,
     };
   }
@@ -57,9 +68,9 @@ class View {
   }
 
   showTime(showAmPm) {
-    const { hour, min, sec, amPm } = this.timeObject.getCurrentTime();
-    this.timeElement.innerHTML = `${hour}<span>:</span>${min}<span>:</span>${sec} ${
-      showAmPm ? amPm : ""
+    const { hour, min, sec, dayOfWeek, dayOfMonth, month, amPm } = this.timeObject.getCurrentTime();
+    this.timeElement.innerHTML = `<div class="day">${dayOfWeek}, ${dayOfMonth} ${month}</div>${hour}<span>:</span>${min}<span>:</span>${sec} ${
+      showAmPm && !this.timeObject.is24h ? amPm : ""
     }`;
     setTimeout(this.showTime.bind(this), 1000, showAmPm);
   }
@@ -141,7 +152,8 @@ const greeting = document.getElementById("greeting");
 const name = document.getElementById("name");
 const focus = document.getElementById("focus");
 
-const timeObject = new Time();
+const is24h = true;
+const timeObject = new Time(is24h);
 const view = new View(timeObject, time, greeting, name, focus);
 const momentum = new Momentum(view);
 momentum.run();
