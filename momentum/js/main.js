@@ -67,20 +67,26 @@ class View {
     this.setEventListeners();
   }
 
+  addBackgrounds(backgrounds) {
+    this.backgrounds = backgrounds;
+  }
+
   showTime(showAmPm) {
     const { hour, min, sec, dayOfWeek, dayOfMonth, month, amPm } = this.timeObject.getCurrentTime();
     this.timeElement.innerHTML = `<div class="day">${dayOfWeek}, ${dayOfMonth} ${month}</div>${hour}<span>:</span>${min}<span>:</span>${sec} ${
       showAmPm && !this.timeObject.is24h ? amPm : ""
     }`;
+    this.setBackground(hour);
     setTimeout(this.showTime.bind(this), 1000, showAmPm);
   }
 
-  setBackground() {
-    const timeOfDay = this.timeObject.getTimeOfDay();
-    if (timeOfDay === "Evening" || timeOfDay === "Night") {
-      this.container.style.color = "#fff";
+  setBackground(hour) {
+    if (this.backgrounds !== undefined) {
+      const timeOfDay = this.timeObject.getTimeOfDay().toLowerCase();
+      let imgNumber = this.backgrounds[timeOfDay][hour % 6];
+      imgNumber = imgNumber < 10 ? `0${imgNumber}` : imgNumber;
+      this.container.style.backgroundImage = `url('assets/img/${timeOfDay}/${imgNumber}.jpg')`;
     }
-    this.container.style.backgroundImage = `url('assets/img/${timeOfDay.toLowerCase()}/01.jpg')`;
   }
 
   setGreeting() {
@@ -149,12 +155,44 @@ class View {
 class Momentum {
   constructor(view) {
     this.view = view;
+    this.backgrounds = {};
+  }
+
+  generateArrayRandomNumber (min, max) {
+    var totalNumbers 		= max - min + 1,
+      arrayTotalNumbers 	= [],
+      arrayRandomNumbers 	= [],
+      tempRandomNumber;
+
+    while (totalNumbers--) {
+      arrayTotalNumbers.push(totalNumbers + min);
+    }
+
+    while (arrayTotalNumbers.length) {
+      tempRandomNumber = Math.round(Math.random() * (arrayTotalNumbers.length - 1));
+      arrayRandomNumbers.push(arrayTotalNumbers[tempRandomNumber]);
+      arrayTotalNumbers.splice(tempRandomNumber, 1);
+    }
+
+    return arrayRandomNumbers;
+  }
+
+  generateBackgrounds() {
+    const random = this.generateArrayRandomNumber(1, 20);
+    this.backgrounds = {
+      morning: random.slice(0, 6),
+      afternoon: random.slice(0, 6),
+      evening: random.slice(0, 6),
+      night: random.slice(0, 6)
+    }
   }
 
   run(showAmPm = true) {
+    this.generateBackgrounds();
+    this.view.addBackgrounds(this.backgrounds);
     this.view.showTime(showAmPm);
     this.view.setGreeting();
-    this.view.setBackground();
+    // this.view.setBackground();
     this.view.getName();
     this.view.getFocus();
   }
