@@ -28,6 +28,12 @@ body {
 h1 {
   font-size: 3rem;
   margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+#name {
+  margin-left: 20px;
 }
 
 h2 {

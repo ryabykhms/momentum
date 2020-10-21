@@ -106,10 +106,18 @@ class View {
 
   setName(e) {
     this.setStorageAfterEvent(e, "name");
+    if (e.type === "blur" && e.target.textContent.trim() === '') {
+      e.target.textContent = '[Enter Name]';
+      localStorage.removeItem('name');
+    }
   }
 
   setFocus(e) {
     this.setStorageAfterEvent(e, "focus");
+    if (e.type === "blur" && e.target.textContent.trim() === '') {
+      e.target.textContent = '[Enter Focus]';
+      localStorage.removeItem('focus');
+    }
   }
 
   setStorageAfterEvent(e, item) {
@@ -124,11 +132,17 @@ class View {
     }
   }
 
+  clearField(e) {
+    e.target.textContent = '';
+  }
+
   setEventListeners() {
     this.nameElement.addEventListener("keypress", this.setName.bind(this));
     this.nameElement.addEventListener("blur", this.setName.bind(this));
+    this.nameElement.addEventListener("click", this.clearField.bind(this));
     this.focusElement.addEventListener("keypress", this.setFocus.bind(this));
     this.focusElement.addEventListener("blur", this.setFocus.bind(this));
+    this.focusElement.addEventListener("click", this.clearField.bind(this));
   }
 }
 
