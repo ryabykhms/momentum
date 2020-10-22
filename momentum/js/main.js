@@ -285,15 +285,38 @@ class Momentum {
   }
 }
 
+class Quote {
+  constructor(qouteElement, authorElement, nextQuoteButton, lang = 'en') {
+    this.qouteElement = qouteElement;
+    this.authorElement = authorElement;
+    this.nextQuoteButton = nextQuoteButton;
+    this.lang = lang;
+
+    document.addEventListener('DOMContentLoaded', this.getQuote.bind(this));
+    nextQuoteButton.addEventListener('click', this.getQuote.bind(this));
+  }
+
+  async getQuote() {
+    const url = `https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=${this.lang}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    this.qouteElement.textContent = data.quoteText;
+    this.authorElement.textContent = data.quoteAuthor;
+  }
+}
+
 // DOM Elements
 const time = document.getElementById('time');
 const greeting = document.getElementById('greeting');
 const name = document.getElementById('name');
 const focus = document.getElementById('focus');
 const next = document.getElementById('next-image');
-
+const nextQuote = document.getElementById('next-quote');
+const blockquote = document.querySelector('blockquote');
+const figcaption = document.querySelector('figcaption');
 const is24h = true;
 const timeObject = new Time(is24h);
+const quoteObject = new Quote(blockquote, figcaption, nextQuote);
 const view = new View(timeObject, time, greeting, name, focus, next);
 const momentum = new Momentum(view);
 momentum.run();
