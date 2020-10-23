@@ -18,7 +18,7 @@
   </head>
 
   <body>
-    <button id="next-image"></button>
+    <button id="next-image" title="Next background image"></button>
     <div class="weather">
       <div class="temperature-info">
         <i class="weather-icon owf"></i>
@@ -29,17 +29,32 @@
         <div class="humidity"></div>
       </div>
       <div class="weather-description"></div>
-      <div class="city" spellcheck="false" contenteditable="true"></div>
+      <div
+        class="city"
+        spellcheck="false"
+        contenteditable="true"
+        title="Enter the city"
+      ></div>
     </div>
 
     <time id="time"></time>
     <h1>
       <span id="greeting"></span>
-      <span id="name" spellcheck="false" contenteditable="true"></span>
+      <span
+        id="name"
+        spellcheck="false"
+        contenteditable="true"
+        title="Enter the name"
+      ></span>
     </h1>
 
     <h2>What Is Your Focus For Today?</h2>
-    <h2 id="focus" spellcheck="false" contenteditable="true"></h2>
+    <h2
+      id="focus"
+      spellcheck="false"
+      contenteditable="true"
+      title="Enter the your goal"
+    ></h2>
 
     <div class="blockquote">
       <figure class="quote">
@@ -51,8 +66,8 @@
       </figure>
     </div>
 
-    <div class="lang">en</div>
-    <button id="next-quote"></button>
+    <div class="lang" title="Language">en</div>
+    <button id="next-quote" title="Next quote"></button>
 
     <script src="js/main.js"></script>
   </body>
