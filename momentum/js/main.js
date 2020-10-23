@@ -313,8 +313,12 @@ class Weather {
     this.lang = lang;
     this.units = units;
 
+    this.city.textContent = this.city.textContent || 'Minsk';
+
     document.addEventListener('DOMContentLoaded', this.getWeather.bind(this));
     this.city.addEventListener('keypress', this.setCity.bind(this));
+    this.city.addEventListener('keypress', this.setCity.bind(this));
+    this.city.addEventListener('blur', this.setCity.bind(this));
 
     this.weatherIcon = document.querySelector('.weather-icon');
     this.temperature = document.querySelector('.temperature');
@@ -344,14 +348,62 @@ class Weather {
     this.weatherIcon.classList.add(`owf-${idWeatherIcon}`);
     this.temperature.textContent = `${temperature}°C`;
     this.weatherDescription.textContent = weatherDescription;
-    console.log(idWeatherIcon, weatherDescription, temperature);
+
+    // console.log(idWeatherIcon, weatherDescription, temperature);
   }
 
-  setCity(event) {
-    if (event.code === 'Enter') {
-      this.getWeather();
-      this.city.blur();
+  // setCity(event) {
+  //   if (event.code === 'Enter') {
+  // this.getWeather();
+  // this.city.blur();
+  //   }
+  // }
+
+  getCity() {
+    if (localStorage.getItem('name') === null) {
+      this.nameElement.textContent = '[Enter Name]';
+    } else {
+      this.nameElement.textContent = localStorage.getItem('name');
     }
+  }
+
+  setText(e, itemName) {
+    if (e.target.textContent.trim() === '') {
+      const item = localStorage.getItem(itemName);
+      if (item === null || item.trim() === '') {
+        e.target.textContent = `Minsk`;
+      } else {
+        e.target.textContent = item;
+      }
+    } else {
+      localStorage.setItem(itemName, e.target.textContent);
+    }
+  }
+
+  setCity(e) {
+    this.setStorageAfterEvent(e, 'city');
+  }
+
+  setStorageAfterEvent(e, item) {
+    if (e.type === 'keypress') {
+      // Make sure enter is pressed
+      if (e.which == 13 || e.keyCode == 13) {
+        this.setText(e, item);
+        e.target.blur();
+        this.getWeather().catch((err) => {
+          e.target.textContent = 'Minsk';
+        });
+      }
+    } else {
+      this.setText(e, item);
+      this.getWeather().catch((err) => {
+        e.target.textContent = 'Minsk';
+      });
+    }
+  }
+
+  clearField(e) {
+    e.target.textContent = '';
   }
 }
 
