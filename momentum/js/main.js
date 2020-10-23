@@ -356,16 +356,7 @@ class Weather {
     this.weatherIcon.classList.add(`owf-${idWeatherIcon}`);
     this.temperature.textContent = `${temperature}°C`;
     this.weatherDescription.textContent = weatherDescription;
-
-    // console.log(idWeatherIcon, weatherDescription, temperature);
   }
-
-  // setCity(event) {
-  //   if (event.code === 'Enter') {
-  // this.getWeather();
-  // this.city.blur();
-  //   }
-  // }
 
   getCity() {
     if (localStorage.getItem('name') === null) {
