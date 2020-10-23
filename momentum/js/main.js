@@ -321,6 +321,7 @@ class Weather {
     this.lang = lang;
     this.units = units;
 
+    this.getCity();
     this.city.textContent = this.city.textContent || 'Minsk';
 
     document.addEventListener('DOMContentLoaded', this.getWeather.bind(this));
@@ -359,10 +360,10 @@ class Weather {
   }
 
   getCity() {
-    if (localStorage.getItem('name') === null) {
-      this.nameElement.textContent = '[Enter Name]';
+    if (localStorage.getItem('city') === null) {
+      this.city.textContent = 'Minsk';
     } else {
-      this.nameElement.textContent = localStorage.getItem('name');
+      this.city.textContent = localStorage.getItem('city');
     }
   }
 
