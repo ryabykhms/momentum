@@ -196,4 +196,11 @@ h2 {
   .city {
     font-size: 1.6rem;
   }
+
+  .weather {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 10px;
+  }
 }
