@@ -305,6 +305,56 @@ class Quote {
   }
 }
 
+class Weather {
+  constructor(city, lang = 'en', units = 'metric') {
+    this.city = city;
+    this.apiUrl = 'https://api.openweathermap.org/data/2.5/weather?';
+    this.apiKey = '08f2a575dda978b9c539199e54df03b0';
+    this.lang = lang;
+    this.units = units;
+
+    document.addEventListener('DOMContentLoaded', this.getWeather.bind(this));
+    this.city.addEventListener('keypress', this.setCity.bind(this));
+
+    this.weatherIcon = document.querySelector('.weather-icon');
+    this.temperature = document.querySelector('.temperature');
+    this.weatherDescription = document.querySelector('.weather-description');
+  }
+
+  buildApiLink() {
+    const city = this.city.textContent;
+    const apiUrl = this.apiUrl;
+    const apiKey = this.apiKey;
+    const lang = this.lang;
+    const units = this.units;
+
+    return `${apiUrl}q=${city}&lang=${lang}&appid=${apiKey}&units=${units}`;
+  }
+
+  async getWeather() {
+    const url = this.buildApiLink();
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const idWeatherIcon = data.weather[0].id;
+    const weatherDescription = data.weather[0].description;
+    const temperature = data.main.temp;
+
+    this.weatherIcon.className = 'weather-icon owf';
+    this.weatherIcon.classList.add(`owf-${idWeatherIcon}`);
+    this.temperature.textContent = `${temperature}°C`;
+    this.weatherDescription.textContent = weatherDescription;
+    console.log(idWeatherIcon, weatherDescription, temperature);
+  }
+
+  setCity(event) {
+    if (event.code === 'Enter') {
+      this.getWeather();
+      this.city.blur();
+    }
+  }
+}
+
 // DOM Elements
 const time = document.getElementById('time');
 const greeting = document.getElementById('greeting');
@@ -314,6 +364,10 @@ const next = document.getElementById('next-image');
 const nextQuote = document.getElementById('next-quote');
 const blockquote = document.querySelector('blockquote');
 const figcaption = document.querySelector('figcaption');
+
+const city = document.querySelector('.city');
+const weather = new Weather(city);
+
 const is24h = true;
 const timeObject = new Time(is24h);
 const quoteObject = new Quote(blockquote, figcaption, nextQuote);
