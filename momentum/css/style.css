@@ -83,6 +83,16 @@ h2 {
   font-size: 2rem;
 }
 
+.add-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wind {
+  margin-right: 5px;
+}
+
 .weather-icon {
   margin-right: 5px;
 }

@@ -317,7 +317,7 @@ class Weather {
   constructor(city, lang = 'en', units = 'metric') {
     this.city = city;
     this.apiUrl = 'https://api.openweathermap.org/data/2.5/weather?';
-    this.apiKey = '08f2a575dda978b9c539199e54df03b0';
+    this.apiKey = '3eeaaec6f26337a738d266bb3cd6bebf';
     this.lang = lang;
     this.units = units;
 
@@ -332,6 +332,8 @@ class Weather {
     this.weatherIcon = document.querySelector('.weather-icon');
     this.temperature = document.querySelector('.temperature');
     this.weatherDescription = document.querySelector('.weather-description');
+    this.wind = document.querySelector('.wind');
+    this.humidity = document.querySelector('.humidity');
   }
 
   buildApiLink() {
@@ -352,11 +354,15 @@ class Weather {
     const idWeatherIcon = data.weather[0].id;
     const weatherDescription = data.weather[0].description;
     const temperature = data.main.temp;
+    const wind = data.wind.speed;
+    const humidity = data.main.humidity;
 
     this.weatherIcon.className = 'weather-icon owf';
     this.weatherIcon.classList.add(`owf-${idWeatherIcon}`);
     this.temperature.textContent = `${temperature}°C`;
     this.weatherDescription.textContent = weatherDescription;
+    this.wind.textContent = `${wind}m/s`;
+    this.humidity.textContent = `${humidity}%`;
   }
 
   getCity() {
