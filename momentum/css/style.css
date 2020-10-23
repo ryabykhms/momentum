@@ -66,6 +66,10 @@ h2 {
   transition: all 0.2s ease-in-out;
 }
 
+#next-image:focus {
+  outline: none;
+}
+
 #next-image:hover {
   transform: rotate(90deg);
 }
@@ -122,6 +126,10 @@ h2 {
 
 #next-quote:hover {
   transform: translate(10px);
+}
+
+#next-quote:focus {
+  outline: none;
 }
 
 .blockquote {
