@@ -13,7 +13,16 @@
   </head>
 
   <body>
-    <button id="next-image">Next</button>
+    <button id="next-image"></button>
+    <div class="weather">
+      <div class="temperature-info">
+        <i class="weather-icon owf"></i>
+        <div class="temperature"></div>
+      </div>
+      <div class="weather-description"></div>
+      <div class="city" contenteditable="true"></div>
+    </div>
+
     <time id="time"></time>
     <h1>
       <span id="greeting"></span>
@@ -23,19 +32,18 @@
     <h2>What Is Your Focus For Today?</h2>
     <h2 id="focus" contenteditable="true"></h2>
 
-    <button id="next-quote"></button>
-    <figure class="quote">
-      <blockquote>
-        You were not born a winner, and you were not born a loser. You are what
-        you make yourself be.
-      </blockquote>
-      <figcaption>Lou Holtz</figcaption>
-    </figure>
+    <div class="blockquote">
+      <figure class="quote">
+        <blockquote>
+          You were not born a winner, and you were not born a loser. You are
+          what you make yourself be.
+        </blockquote>
+        <figcaption>Lou Holtz</figcaption>
+      </figure>
+    </div>
 
-    <div class="city" contenteditable="true"></div>
-    <i class="weather-icon owf"></i>
-    <div class="temperature"></div>
-    <div class="weather-description"></div>
+    <div class="lang">en</div>
+    <button id="next-quote"></button>
 
     <script src="js/main.js"></script>
   </body>
