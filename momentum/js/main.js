@@ -305,11 +305,17 @@ class Quote {
   }
 
   async getQuote() {
-    const url = `https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=${this.lang}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    this.qouteElement.textContent = data.quoteText;
-    this.authorElement.textContent = data.quoteAuthor;
+    try {
+      this.nextQuoteButton.disabled = true;
+      const url = `https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=${this.lang}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      this.qouteElement.textContent = data.quoteText;
+      this.authorElement.textContent = data.quoteAuthor;
+      this.nextQuoteButton.disabled = false;
+    } catch (e) {
+      this.nextQuoteButton.disabled = false;
+    }
   }
 }
 
