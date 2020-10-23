@@ -134,6 +134,16 @@ class View {
 
   setText(e, itemName) {
     if (e.target.textContent.trim() === '') {
+      let opacity = 0.1;
+      e.target.style.opacity = opacity;
+
+      let timer = setInterval(function () {
+        if (opacity >= 1) {
+          clearInterval(timer);
+        }
+        e.target.style.opacity = opacity;
+        opacity += opacity * 0.1;
+      }, 10);
       const item = localStorage.getItem(itemName);
       if (item === null || item.trim() === '') {
         e.target.textContent = `[Enter ${itemName}]`;
@@ -169,7 +179,19 @@ class View {
   }
 
   clearField(e) {
-    e.target.textContent = '';
+    let opacity = 1;
+
+    let timer = setInterval(function () {
+      if (opacity <= 0.1) {
+        clearInterval(timer);
+        opacity = 1;
+        e.target.textContent = '';
+      }
+
+      e.target.style.opacity = opacity;
+
+      opacity -= opacity * 0.1;
+    }, 10);
   }
 
   vieBgImage(data) {
@@ -381,6 +403,16 @@ class Weather {
 
   setText(e, itemName) {
     if (e.target.textContent.trim() === '') {
+      let opacity = 0.1;
+      e.target.style.opacity = opacity;
+
+      let timer = setInterval(function () {
+        if (opacity >= 1) {
+          clearInterval(timer);
+        }
+        e.target.style.opacity = opacity;
+        opacity += opacity * 0.1;
+      }, 10);
       const item = localStorage.getItem(itemName);
       if (item === null || item.trim() === '') {
         e.target.textContent = `Minsk`;
@@ -415,7 +447,19 @@ class Weather {
   }
 
   clearField(e) {
-    e.target.textContent = '';
+    let opacity = 1;
+
+    let timer = setInterval(function () {
+      if (opacity <= 0.1) {
+        clearInterval(timer);
+        opacity = 1;
+        e.target.textContent = '';
+      }
+
+      e.target.style.opacity = opacity;
+
+      opacity -= opacity * 0.1;
+    }, 10);
   }
 }
 
