@@ -66,6 +66,11 @@ class View {
     this.nextElement = nextElement;
     this.container = container;
 
+    this.maxLength = {
+      name: 50,
+      focus: 100,
+    };
+
     this.currentBackground = {};
     this.setEventListeners();
   }
@@ -149,6 +154,9 @@ class View {
   }
 
   setStorageAfterEvent(e, item) {
+    if (e.target.textContent.length > this.maxLength[item]) {
+      e.preventDefault();
+    }
     if (e.type === 'keypress') {
       // Make sure enter is pressed
       if (e.which == 13 || e.keyCode == 13) {
