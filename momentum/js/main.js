@@ -68,7 +68,7 @@ class View {
 
     this.maxLength = {
       name: 50,
-      focus: 100,
+      focus: 60,
     };
 
     this.currentBackground = {};
