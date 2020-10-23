@@ -326,8 +326,8 @@ class Weather {
 
     document.addEventListener('DOMContentLoaded', this.getWeather.bind(this));
     this.city.addEventListener('keypress', this.setCity.bind(this));
-    this.city.addEventListener('keypress', this.setCity.bind(this));
     this.city.addEventListener('blur', this.setCity.bind(this));
+    this.city.addEventListener('click', this.clearField.bind(this));
 
     this.weatherIcon = document.querySelector('.weather-icon');
     this.temperature = document.querySelector('.temperature');
