@@ -357,6 +357,8 @@ class Weather {
 
     this.getCity();
     this.city.textContent = this.city.textContent || 'Minsk';
+    localStorage.setItem('city', this.city.textContent);
+    this.getWeather();
 
     document.addEventListener('DOMContentLoaded', this.getWeather.bind(this));
     this.city.addEventListener('keypress', this.setCity.bind(this));
@@ -407,6 +409,8 @@ class Weather {
         delay: 5000,
       });
       this.city.textContent = 'Minsk';
+      localStorage.setItem('city', ' Minsk');
+      this.getWeather();
     }
   }
 
@@ -433,6 +437,7 @@ class Weather {
       const item = localStorage.getItem(itemName);
       if (item === null || item.trim() === '') {
         e.target.textContent = `Minsk`;
+        localStorage.setItem('city', ' Minsk');
       } else {
         e.target.textContent = item;
       }
