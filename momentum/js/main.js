@@ -336,6 +336,12 @@ class Quote {
       this.authorElement.textContent = data.quoteAuthor;
       this.nextQuoteButton.disabled = false;
     } catch (e) {
+      Toast.add({
+        text: 'Error! Failed to get quotes by api!',
+        color: '#dc3545',
+        autohide: true,
+        delay: 5000,
+      });
       this.nextQuoteButton.disabled = false;
     }
   }
@@ -375,22 +381,33 @@ class Weather {
   }
 
   async getWeather() {
-    const url = this.buildApiLink();
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+      const url = this.buildApiLink();
+      const res = await fetch(url);
+      const data = await res.json();
 
-    const idWeatherIcon = data.weather[0].id;
-    const weatherDescription = data.weather[0].description;
-    const temperature = data.main.temp;
-    const wind = data.wind.speed;
-    const humidity = data.main.humidity;
+      const idWeatherIcon = data.weather[0].id;
+      const weatherDescription = data.weather[0].description;
+      const temperature = data.main.temp;
+      const wind = data.wind.speed;
+      const humidity = data.main.humidity;
 
-    this.weatherIcon.className = 'weather-icon owf';
-    this.weatherIcon.classList.add(`owf-${idWeatherIcon}`);
-    this.temperature.textContent = `${temperature}°C`;
-    this.weatherDescription.textContent = weatherDescription;
-    this.wind.textContent = `${wind}m/s`;
-    this.humidity.textContent = `${humidity}%`;
+      this.weatherIcon.className = 'weather-icon owf';
+      this.weatherIcon.classList.add(`owf-${idWeatherIcon}`);
+      this.temperature.textContent = `${temperature}°C`;
+      this.weatherDescription.textContent = weatherDescription;
+      this.wind.textContent = `${wind}m/s`;
+      this.humidity.textContent = `${humidity}%`;
+    } catch (e) {
+      Toast.add({
+        text:
+          'Error! The city may have been entered incorrectly or failed to get weather by api!',
+        color: '#dc3545',
+        autohide: true,
+        delay: 5000,
+      });
+      this.city.textContent = 'Minsk';
+    }
   }
 
   getCity() {
@@ -434,15 +451,11 @@ class Weather {
       if (e.which == 13 || e.keyCode == 13) {
         this.setText(e, item);
         e.target.blur();
-        this.getWeather().catch((err) => {
-          e.target.textContent = 'Minsk';
-        });
+        this.getWeather();
       }
     } else {
       this.setText(e, item);
-      this.getWeather().catch((err) => {
-        e.target.textContent = 'Minsk';
-      });
+      this.getWeather();
     }
   }
 
@@ -482,3 +495,105 @@ const quoteObject = new Quote(blockquote, figcaption, nextQuote);
 const view = new View(timeObject, time, greeting, name, focus, next);
 const momentum = new Momentum(view);
 momentum.run();
+
+// функция-конструктор Toast (для создания объектов Toast)
+const Toast = function (element, config) {
+  // приватные переменные класса Toast
+  const _this = this,
+    _element = element,
+    _config = {
+      autohide: true,
+      delay: 5000,
+    };
+  // установление _config
+  for (let prop in config) {
+    _config[prop] = config[prop];
+  }
+  // get-свойство element
+  Object.defineProperty(this, 'element', {
+    get: function () {
+      return _element;
+    },
+  });
+  // get-свойство config
+  Object.defineProperty(this, 'config', {
+    get: function () {
+      return _config;
+    },
+  });
+  // обработки события click (скрытие сообщения при нажатии на кнопку "Закрыть")
+  _element.addEventListener('click', function (e) {
+    if (e.target.classList.contains('toast__close')) {
+      _this.hide();
+    }
+  });
+};
+// методы show и hide, описанные в прототипе объекта Toast
+Toast.prototype = {
+  show: function () {
+    const _this = this;
+    this.element.classList.add('toast_show');
+    if (this.config.autohide) {
+      setTimeout(function () {
+        _this.hide();
+      }, this.config.delay);
+    }
+  },
+  hide: function () {
+    this.element.classList.remove('toast_show');
+  },
+};
+// статическая функция для Toast (используется для создания сообщения)
+Toast.create = function (text, color) {
+  const fragment = document.createDocumentFragment(),
+    toast = document.createElement('div'),
+    toastClose = document.createElement('button');
+  toast.classList.add('toast');
+  toast.style.backgroundColor =
+    'rgba(' +
+    parseInt(color.substr(1, 2), 16) +
+    ',' +
+    parseInt(color.substr(3, 2), 16) +
+    ',' +
+    parseInt(color.substr(5, 2), 16) +
+    ',0.3)';
+  toast.textContent = text;
+  toastClose.classList.add('toast__close');
+  toastClose.setAttribute('type', 'button');
+  toastClose.textContent = '×';
+  toast.appendChild(toastClose);
+  fragment.appendChild(toast);
+  return fragment;
+};
+// статическая функция для Toast (используется для добавления сообщения на страницу)
+Toast.add = function (params) {
+  const config = {
+    header: 'Header',
+    text: 'Message',
+    color: '#ffffff',
+    autohide: true,
+    delay: 5000,
+  };
+  if (params !== undefined) {
+    for (let item in params) {
+      config[item] = params[item];
+    }
+  }
+  if (!document.querySelector('.toasts')) {
+    const container = document.createElement('div');
+    container.classList.add('toasts');
+    container.style.cssText =
+      'position: fixed; top: 15px; right: 15px; width: 250px;';
+    document.body.appendChild(container);
+  }
+  document
+    .querySelector('.toasts')
+    .appendChild(Toast.create(config.text, config.color));
+  const toasts = document.querySelectorAll('.toast');
+  const toast = new Toast(toasts[toasts.length - 1], {
+    autohide: config.autohide,
+    delay: config.delay,
+  });
+  toast.show();
+  return toast;
+};
