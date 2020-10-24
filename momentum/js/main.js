@@ -89,9 +89,9 @@ class View {
       month,
       amPm,
     } = this.timeObject.getCurrentTime();
-    this.timeElement.innerHTML = `<div class="day">${dayOfWeek}, ${dayOfMonth} ${month}</div>${hour}<span>:</span>${min}<span>:</span>${sec} ${
+    this.timeElement.innerHTML = `<div class="day">${dayOfWeek}, ${dayOfMonth} ${month}</div><div class="current-time"><div class="hours">${hour}<span>:</span></div><div class="minutes">${min}<span>:</span></div><div class="seconds">${sec}</div> ${
       showAmPm && !this.timeObject.is24h ? amPm : ''
-    }`;
+    }</div>`;
     if (min === '00' && sec === '00') {
       this.setBackground(hour);
     }
