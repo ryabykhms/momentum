@@ -257,9 +257,19 @@ class View {
     this.nameElement.addEventListener('keypress', this.setName.bind(this));
     this.nameElement.addEventListener('blur', this.setName.bind(this));
     this.nameElement.addEventListener('click', this.clearField.bind(this));
+    this.nameElement.addEventListener('keydown', (e) => {
+      if (e.target.textContent.length >= 50) {
+        e.preventDefault();
+      }
+    });
     this.focusElement.addEventListener('keypress', this.setFocus.bind(this));
     this.focusElement.addEventListener('blur', this.setFocus.bind(this));
     this.focusElement.addEventListener('click', this.clearField.bind(this));
+    this.focusElement.addEventListener('keydown', (e) => {
+      if (e.target.textContent.length >= 100) {
+        e.preventDefault();
+      }
+    });
     this.nextElement.addEventListener(
       'click',
       this.changeBackground.bind(this)
@@ -364,6 +374,11 @@ class Weather {
     this.city.addEventListener('keypress', this.setCity.bind(this));
     this.city.addEventListener('blur', this.setCity.bind(this));
     this.city.addEventListener('click', this.clearField.bind(this));
+    this.city.addEventListener('keydown', (e) => {
+      if (e.target.textContent.length >= 40) {
+        e.preventDefault();
+      }
+    });
 
     this.weatherIcon = document.querySelector('.weather-icon');
     this.temperature = document.querySelector('.temperature');
