@@ -332,6 +332,36 @@ class Quote {
     this.nextQuoteButton = nextQuoteButton;
     this.lang = lang;
 
+    this.apiUrls = {
+      favqs: {
+        url: 'https://favqs.com/api/qotd',
+        quotePath: 'quote.body',
+        authorPath: 'quote.author',
+      },
+      adviceslip: {
+        url: 'https://api.adviceslip.com/advice',
+        quotePath: 'slip.advice',
+        authorPath: '',
+      },
+      chucknorris: {
+        url: 'https://api.chucknorris.io/jokes/random',
+        quotePath: 'value',
+        authorPath: '',
+      },
+      quotegarden: {
+        url: 'https://quote-garden.herokuapp.com/api/v2/quotes/random',
+        quotePath: 'quote.quoteText',
+        authorPath: 'quote.quoteAuthor',
+      },
+      forismatic: {
+        url: `https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=${this.lang}`,
+        quotePath: 'quoteText',
+        authorPath: 'quoteAuthor',
+      },
+    };
+
+    this.tries = 0;
+
     document.addEventListener('DOMContentLoaded', this.getQuote.bind(this));
     nextQuoteButton.addEventListener('click', this.getQuote.bind(this));
   }
@@ -339,19 +369,66 @@ class Quote {
   async getQuote() {
     try {
       this.nextQuoteButton.disabled = true;
-      const url = `https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=${this.lang}`;
+      const apiUrlKey = Object.keys(this.apiUrls)[this.tries];
+      const api = this.apiUrls[apiUrlKey];
+      const apiUrl = api.url;
+      const url = `https://cors-anywhere.herokuapp.com/${apiUrl}`;
       const res = await fetch(url);
       const data = await res.json();
-      this.qouteElement.textContent = data.quoteText;
-      this.authorElement.textContent = data.quoteAuthor;
+
+      let quote = undefined;
+      let author = undefined;
+
+      if (data !== undefined) {
+        let paths = api.quotePath.split('.'),
+          current = { ...data },
+          i;
+
+        for (i = 0; i < paths.length; ++i) {
+          if (current[paths[i]] == undefined) {
+            quote = undefined;
+            break;
+          } else {
+            current = current[paths[i]];
+          }
+        }
+        quote = current;
+
+        if (api.authorPath !== '') {
+          paths = api.authorPath.split('.');
+          current = { ...data };
+          for (i = 0; i < paths.length; ++i) {
+            if (current[paths[i]] == undefined) {
+              author = undefined;
+              break;
+            } else {
+              current = current[paths[i]];
+            }
+          }
+          author = current;
+        }
+      }
+
+      if (quote === undefined) {
+        throw new Error('Wrong data!');
+      }
+      this.qouteElement.textContent = quote;
+      this.authorElement.textContent = author || '';
       this.nextQuoteButton.disabled = false;
     } catch (e) {
+      this.tries++;
       Toast.add({
         text: 'Error! Failed to get quotes by api!',
         color: '#dc3545',
         autohide: true,
         delay: 5000,
       });
+
+      if (this.tries < Object.keys(this.apiUrls).length) {
+        this.getQuote();
+      } else {
+        this.tries = 0;
+      }
       this.nextQuoteButton.disabled = false;
     }
   }
