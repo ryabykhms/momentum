@@ -46,8 +46,8 @@ h1 {
   max-width: 95vw;
 }
 
-#name {
-  margin-left: 20px;
+#greeting {
+  margin-right: 10px;
 }
 
 h2 {
@@ -147,7 +147,7 @@ h2 {
   left: 0;
   right: 0;
   margin: 0 auto;
-  max-width: 90vw;
+  max-width: 80vw;
 }
 
 .lang {
@@ -283,5 +283,14 @@ h2 {
 
   .seconds {
     width: 60px;
+  }
+}
+
+@media (max-width: 414px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+  h2 {
+    font-size: 1.4rem;
   }
 }

@@ -67,8 +67,8 @@ class View {
     this.container = container;
 
     this.maxLength = {
-      name: 50,
-      focus: 60,
+      name: 40,
+      focus: 50,
     };
 
     this.currentBackground = {};
@@ -258,7 +258,7 @@ class View {
     this.nameElement.addEventListener('blur', this.setName.bind(this));
     this.nameElement.addEventListener('click', this.clearField.bind(this));
     this.nameElement.addEventListener('keydown', (e) => {
-      if (e.target.textContent.length >= 50) {
+      if (e.target.textContent.length >= this.maxLength['name']) {
         e.preventDefault();
       }
     });
@@ -266,7 +266,7 @@ class View {
     this.focusElement.addEventListener('blur', this.setFocus.bind(this));
     this.focusElement.addEventListener('click', this.clearField.bind(this));
     this.focusElement.addEventListener('keydown', (e) => {
-      if (e.target.textContent.length >= 100) {
+      if (e.target.textContent.length >= this.maxLength['focus']) {
         e.preventDefault();
       }
     });
@@ -543,6 +543,9 @@ class Weather {
   }
 
   setStorageAfterEvent(e, item) {
+    if (e.target.textContent.length >= 40) {
+      e.preventDefault();
+    }
     if (e.type === 'keypress') {
       // Make sure enter is pressed
       if (e.which == 13 || e.keyCode == 13) {
