@@ -204,34 +204,47 @@ class View {
     };
   }
 
+  getNextTimeOfDay(timeOfDay) {
+    switch (timeOfDay) {
+      case 'morning':
+        return 'afternoon';
+        break;
+      case 'afternoon':
+        return 'evening';
+        break;
+      case 'evening':
+        return 'night';
+        break;
+      default:
+        return 'morning';
+        break;
+    }
+  }
+
   changeBackground(e) {
     if (this.backgrounds !== undefined) {
+      let timeOfDay = this.timeObject.getTimeOfDay().toLowerCase();
+      let number = (this.timeObject.getCurrentTime(true).hour % 6) + 1;
       if (Object.keys(this.currentBackground).length === 0) {
+        if (number > 5) {
+          timeOfDay = this.getNextTimeOfDay(timeOfDay);
+          number = 0;
+        }
         this.currentBackground = {
-          timeOfDay: this.timeObject.getTimeOfDay().toLowerCase(),
-          number: (this.timeObject.getCurrentTime(true).hour % 6) + 1,
+          timeOfDay: timeOfDay,
+          number: number,
         };
       } else {
-        let timeOfDay = this.currentBackground.timeOfDay;
-        const number = +this.currentBackground.number + 1;
+        timeOfDay = this.currentBackground.timeOfDay;
+        number = +this.currentBackground.number + 1;
+        if (number > 5) {
+          timeOfDay = this.getNextTimeOfDay(timeOfDay);
+          number = 0;
+        }
         if (this.backgrounds[timeOfDay][number] === undefined) {
-          switch (timeOfDay) {
-            case 'morning':
-              timeOfDay = 'afternoon';
-              break;
-            case 'afternoon':
-              timeOfDay = 'evening';
-              break;
-            case 'evening':
-              timeOfDay = 'night';
-              break;
-            default:
-              timeOfDay = 'morning';
-              break;
-          }
           this.currentBackground = {
             timeOfDay,
-            number: 1,
+            number: 0,
           };
         } else {
           this.currentBackground = {
@@ -240,11 +253,10 @@ class View {
           };
         }
       }
-      const imgNumber =
-        this.currentBackground.number < 10
-          ? `0${this.currentBackground.number}`
-          : this.currentBackground.number;
+      let imgNumber = this.backgrounds[timeOfDay][number];
+      imgNumber = imgNumber < 10 ? `0${imgNumber}` : imgNumber;
       const imageSrc = `assets/img/${this.currentBackground.timeOfDay}/${imgNumber}.jpg`;
+
       this.vieBgImage(imageSrc);
     }
     e.target.disabled = true;
