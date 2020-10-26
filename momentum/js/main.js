@@ -345,6 +345,12 @@ class Quote {
     this.lang = lang;
 
     this.apiUrls = {
+      paperquotes: {
+        url: `https://api.paperquotes.com/apiv1/quotes/?maxlength=130&random=random&lang=${this.lang}&order=?`,
+        token: 'b26b22a28ddc5f2ed32c976b55d57c958170c0a4',
+        quotePath: 'results[0].quote',
+        authorPath: 'results[0].author',
+      },
       favqs: {
         url: 'https://favqs.com/api/qotd',
         quotePath: 'quote.body',
@@ -383,9 +389,24 @@ class Quote {
       this.nextQuoteButton.disabled = true;
       const apiUrlKey = Object.keys(this.apiUrls)[this.tries];
       const api = this.apiUrls[apiUrlKey];
-      const apiUrl = api.url;
+      let apiUrl = api.url;
+      apiUrl = api.hasOwnProperty('token')
+        ? apiUrl + '&date=' + Date.now()
+        : apiUrl;
       const url = `https://cors-anywhere.herokuapp.com/${apiUrl}`;
-      const res = await fetch(url);
+      let obj = {};
+      if (api.hasOwnProperty('token')) {
+        obj = {
+          method: 'GET',
+          headers: {
+            Authorization: `Token ${api.token}`,
+            Cache: 'reload',
+            Pragma: 'no-cache',
+            'Cache-control': 'no-cache',
+          },
+        };
+      }
+      const res = await fetch(url, obj);
       const data = await res.json();
 
       let quote = undefined;
@@ -419,6 +440,11 @@ class Quote {
           }
           author = current;
         }
+      }
+
+      if (api.hasOwnProperty('token')) {
+        quote = data.results[0].quote;
+        author = data.results[0].author;
       }
 
       if (quote === undefined) {
