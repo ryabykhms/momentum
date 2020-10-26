@@ -338,8 +338,8 @@ class Momentum {
 }
 
 class Quote {
-  constructor(qouteElement, authorElement, nextQuoteButton, lang = 'en') {
-    this.qouteElement = qouteElement;
+  constructor(quoteElement, authorElement, nextQuoteButton, lang = 'en') {
+    this.quoteElement = quoteElement;
     this.authorElement = authorElement;
     this.nextQuoteButton = nextQuoteButton;
     this.lang = lang;
@@ -450,7 +450,7 @@ class Quote {
       if (quote === undefined) {
         throw new Error('Wrong data!');
       }
-      this.qouteElement.textContent = quote;
+      this.quoteElement.textContent = quote;
       this.authorElement.textContent = author || '';
       this.nextQuoteButton.disabled = false;
     } catch (e) {
