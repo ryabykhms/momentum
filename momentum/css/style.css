@@ -1,0 +1,296 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  background-size: cover;
+  color: #fff;
+  font-size: 1.4rem;
+  transition: background-image 1s ease-in-out;
+  width: 100vw;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 0px 2000px inset;
+}
+
+body * {
+  text-shadow: 2px 2px 2px #000;
+}
+
+#time {
+  font-size: 8rem;
+}
+
+.day {
+  font-size: 4rem;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  word-break: break-all;
+  max-width: 95vw;
+}
+
+#greeting {
+  margin-right: 10px;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+  word-break: break-all;
+  max-width: 95vw;
+}
+
+#focus {
+  opacity: 1;
+}
+
+#next-image {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 30px;
+  height: 30px;
+  background: url(../assets/img/refresh.svg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#next-image:focus {
+  outline: none;
+}
+
+#next-image:hover {
+  transform: rotate(90deg);
+}
+
+.weather {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  text-align: right;
+}
+
+.temperature-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 2rem;
+}
+
+.add-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.wind {
+  margin-right: 5px;
+}
+
+.weather-icon {
+  margin-right: 5px;
+}
+
+.city {
+  font-size: 2rem;
+}
+
+.lang {
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+}
+
+#next-quote {
+  display: inline-block;
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  width: 40px;
+  height: 40px;
+  background: url(../assets/img/next.svg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#next-quote:hover {
+  transform: translate(5px);
+}
+
+#next-quote:focus {
+  outline: none;
+}
+
+.blockquote {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 80vw;
+}
+
+.lang {
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.lang:hover {
+  transform: scale(1.3);
+}
+
+.current-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seconds {
+  width: 80px;
+}
+
+.toast {
+  overflow: hidden;
+  font-size: 1.4rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  display: none;
+  position: relative;
+  padding: 1rem 2rem 1rem 1rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.toasts {
+  position: fixed;
+  top: 15px;
+  left: 0;
+  right: 0;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.toast__close {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.6;
+  appearance: button;
+  margin: 0;
+  font-family: inherit;
+  border-radius: 0;
+}
+
+.toast_show {
+  display: block;
+}
+
+.toast:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 700px) {
+  h1 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  #time {
+    font-size: 6rem;
+  }
+
+  .day {
+    font-size: 2rem;
+  }
+
+  #next-image {
+    width: 20px;
+    height: 20px;
+    top: 10px;
+    left: 10px;
+  }
+
+  #next-quote {
+    width: 20px;
+    height: 20px;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .lang {
+    font-size: 1.4rem;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .temperature-info {
+    font-size: 1.6rem;
+  }
+
+  .city {
+    font-size: 1.6rem;
+  }
+
+  .weather {
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    column-gap: 10px;
+    flex-wrap: wrap;
+    max-width: 80%;
+  }
+
+  .seconds {
+    width: 60px;
+  }
+}
+
+@media (max-width: 414px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
+}
